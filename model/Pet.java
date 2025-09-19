@@ -1,11 +1,13 @@
-
+package model;
 
 public class Pet {
     private String nome;
     private byte idade;
     private String especie;
+    private String raca;
     private String sexo;
     private double peso;
+    private Tutor tutor;
 
     public Pet(String nome, byte idade, String especie, String sexo, double peso) {
         this.nome = nome;
@@ -55,4 +57,19 @@ public class Pet {
         this.peso = peso;
     }
 
+    public void setTutor(Tutor tutor) {
+        this.tutor = tutor;
+    }
+
+    public Tutor getTutor() {
+        return tutor;
+    }
+
+    public void setRaca(String raca) {
+        this.raca = raca;
+    }
+    
+    public String getRaca() {
+        return raca;
+    }
 }

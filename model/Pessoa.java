@@ -1,18 +1,20 @@
+package model;
 
-// Superclasse
 public class Pessoa {
     private String nome;
     private byte idade;
     private String cpf;
+    private String email;
     private String telefone;
     
     public Pessoa() {
     }
 
-    public Pessoa(String nome, byte idade, String cpf, String telefone) {
+    public Pessoa(String nome, byte idade, String cpf, String email, String telefone) {
         this.nome = nome;
         this.idade = idade;
         this.cpf = cpf;
+        this.email = email;
         this.telefone = telefone;
     }
 
@@ -48,4 +50,11 @@ public class Pessoa {
         this.telefone = telefone;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
