@@ -1,11 +1,11 @@
 package model;
 
 public class Servico {
-    String tipoServico;
-    String data;
-    int valor;
-    boolean statusServico;
-    Pet pet;
+    private String tipoServico;
+    private String data;
+    private int valor;
+    private boolean statusServico;
+    private Pet pet;
 
     public Servico(String tipoServico, String data, int valor, boolean statusServico, Pet pet) {
         this.tipoServico = tipoServico;

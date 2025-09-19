@@ -3,7 +3,7 @@ package model;
 import java.util.ArrayList;
 
 public class Tutor extends Pessoa {
-    ArrayList<Pet> pets = new ArrayList<>();
+    private ArrayList<Pet> pets = new ArrayList<>();
     
     public Tutor(String nome, byte idade, String cpf, String email, String telefone) {
         super(nome, idade, cpf, email, telefone);

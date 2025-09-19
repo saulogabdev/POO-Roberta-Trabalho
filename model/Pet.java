@@ -17,6 +17,10 @@ public class Pet {
         this.peso = peso;
     }
 
+    public Pet() {
+        
+    }
+
     public String getNome() {
         return nome;
     }
