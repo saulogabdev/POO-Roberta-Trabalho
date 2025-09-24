@@ -9,7 +9,21 @@ public class Tutor extends Pessoa {
         super(nome, idade, cpf, email, telefone);
     }
 
+    public void listarPets() {
+
+    }
+
+    public void removerPet(String nome) {
+        for (int i = 0; i < pets.size(); i++) {
+            if (pets.get(i).getNome().equalsIgnoreCase(nome)) {
+                pets.remove(i);
+            }
+        }
+    }
+
     public void adicionarPet(Pet pet) {
         pets.add(pet);
     }
+
+
 }

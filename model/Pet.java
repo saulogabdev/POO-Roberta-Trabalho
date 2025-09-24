@@ -9,12 +9,14 @@ public class Pet {
     private double peso;
     private Tutor tutor;
 
-    public Pet(String nome, byte idade, String especie, String sexo, double peso) {
+    public Pet(String nome, byte idade, String especie, String raca, String sexo, double peso, Tutor tutor) {
         this.nome = nome;
         this.idade = idade;
         this.especie = especie;
+        this.raca = raca;
         this.sexo = sexo;
         this.peso = peso;
+        this.tutor = tutor;
     }
 
     public Pet() {

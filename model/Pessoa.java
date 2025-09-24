@@ -39,6 +39,7 @@ public class Pessoa {
     }
 
     public void setCpf(String cpf) {
+        cpf = cpf.replaceAll("\\D", "");
         this.cpf = cpf;
     }
 
