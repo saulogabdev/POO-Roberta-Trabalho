@@ -13,6 +13,7 @@ public class Pessoa {
     public Pessoa(String nome, byte idade, String cpf, String email, String telefone) {
         this.nome = nome;
         this.idade = idade;
+        cpf = cpf.replaceAll("\\D", "");
         this.cpf = cpf;
         this.email = email;
         this.telefone = telefone;

@@ -10,7 +10,15 @@ public class Tutor extends Pessoa {
     }
 
     public void listarPets() {
-
+        if (pets.isEmpty()) {
+            System.out.println("\u001B[31m"+"Nenhum pet castrado."+"\u001B[0m");
+        } else {
+            System.out.printf("%-3s | %-15s | %-15s | %-15s | %-15s\n", "ID", "Nome do Pet", "Especie do Pet", "Raça do Pet", "Dono" );
+            for (int i = 0; i < pets.size(); i++) {
+                System.out.printf("%-3d | %-15s | %-15s | %-15s | %-15s\n", 
+                (i + 1), pets.get(i).getNome(), pets.get(i).getEspecie(), pets.get(i).getRaca(), pets.get(i).getTutor().getNome());
+            }
+        }
     }
 
     public void removerPet(String nome) {
@@ -23,6 +31,10 @@ public class Tutor extends Pessoa {
 
     public void adicionarPet(Pet pet) {
         pets.add(pet);
+    }
+
+    public int petSize() {
+        return pets.size();
     }
 
 
