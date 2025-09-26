@@ -65,13 +65,13 @@ public class CadastroServico {
         if (servicos.isEmpty()) {
             System.out.println("\u001B[31mNenhum serviço cadastrado.\u001B[0m");
         } else {
-            System.out.printf("%-3s | %-15s | %-5s | %-20s | %-25s | %-20s | %-15s\n",
+            System.out.printf("%-3s | %-15s | %-12s | %-10s | %-15s | %-15s | %-15s\n",
                     "ID", "Tipo", "Data", "Valor", "Pet", "Funcionário", "Status");
             for (int i = 0; i < servicos.size(); i++) {
                 Servico s = servicos.get(i);
                 if (s.isStatusServico()) {
                     encontrou = true;
-                    System.out.printf("%-3d | %-15s | %-12s | R$%-8.2f | %-15s | %-15s | %-10s\n",
+                    System.out.printf("%-3d | %-15s | %-12s | R$%-8.2f | %-15s | %-15s | %-15s\n",
                             (i + 1),
                             s.getTipoServico(),
                             s.getData(),
@@ -91,19 +91,19 @@ public class CadastroServico {
 
     public void listarServicosFuncionario(Funcionario funcionario) {
         boolean encontrou = false;
-        System.out.printf("%-3s | %-15s | %-12s | %-7s | %-15s | %-10s\n",
+        System.out.printf("%-3s | %-15s | %-12s | %-10s | %-15s | %-10s\n",
                 "ID", "Tipo", "Data", "Valor", "Pet", "Status");
 
         for (int i = 0; i < servicos.size(); i++) {
             Servico s = servicos.get(i);
             if (s.isStatusServico() && s.getFuncionario().equals(funcionario)) {
                 encontrou = true;
-                System.out.printf("%-3d | %-15s | %-12s | R$%-6d | %-15s | %-10s\n",
+                System.out.printf("%-3d | %-15s | %-12s | %-10.2f | %-15s | %-10s\n",
                         (i + 1),
                         s.getTipoServico(),
                         s.getData(),
                         s.getValor(),
-                        s.getPet(),
+                        s.getPet().getNome(),
                         s.isStatusServico() ? "Ativo" : "Concluído");
             }
         }
@@ -111,5 +111,9 @@ public class CadastroServico {
         if (!encontrou) {
             System.out.println("\u001B[31mNenhum serviço encontrado para este funcionário.\u001B[0m");
         }
+    }
+
+    public void concluirServico(int num) {
+        servicos.get(num - 1).concluirServico();
     }
 }

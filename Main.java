@@ -5,6 +5,7 @@ import model.Tutor;
 
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import crud.CadastroFuncionario;
@@ -26,6 +27,12 @@ public class Main {
 
     public static void main(String[] args) {
         int opcao;
+        Tutor tutor = new Tutor("Saulo", (byte)16, "1", "sla", "sla");
+        cadastroTutor.novoTutor(tutor);
+        Funcionario funcionario = new Funcionario("Roberto", (byte)19, "2", "sla", "sla", "sla");
+        cadastroFuncionario.novoFuncionario(funcionario);
+        Pet pet = new Pet("Teddy", (byte)2, "sla", "sla", "sla", 2.9, tutor);
+        cadastroPet.novoPet(pet, tutor);
 
         do {
             limpaTerminal();
@@ -187,38 +194,65 @@ public class Main {
     }
 
     public static void cadastrarPets() {
-        limpaTerminal();
-        System.out.println("============== CADASTRO PET ==============");
-        System.out.printf("Nome: \n");
-        String nome = SC.next();
-        System.out.printf("Idade: \n");
-        byte idade = SC.nextByte();
-        System.out.printf("Especie: \n");
-        String especie = SC.next();
-        System.out.printf("Raça: \n");
-        String raca = SC.next();
-        System.out.printf("Sexo: \n");
-        String sexo = SC.next();
-        System.out.printf("Peso: \n");
-        double peso = SC.nextDouble();
-        System.out.printf("CPF do tutor: \n");
-        Tutor tutor = cadastroTutor.buscarPorCPF(SC.next());
-        if (tutor != null) {
-            Pet pet = new Pet(nome, idade, especie, raca, sexo, peso, tutor);
-            cadastroPet.novoPet(pet, tutor);
-            System.out.println(VERDE + "Cadastro concluido com sucesso!" + RESET);
-        } else {
-            System.out.println();
-            System.out.println(VERMELHO + " CPF não encontrado!");
-            System.out.println("Possíveis motivos:");
-            System.out.println(" - O CPF foi digitado incorretamente;");
-            System.out.println(" - O tutor ainda não foi cadastrado.");
-            System.out.println("Tente novamente ou cadastre um novo tutor." + RESET);
-            System.out.println();
+    limpaTerminal();
+    System.out.println("============== CADASTRO PET ==============");
+    String nome = "";
+    byte idade = 0;
+    String especie = "";
+    String raca = "";
+    String sexo = "";
+    double peso = 0;
+    Tutor tutor = null;
+    System.out.printf("Nome: \n");
+    nome = SC.next();
+    while (true) {
+        try {
+            System.out.printf("Idade: \n");
+            idade = SC.nextByte();
+            break;
+        } catch (InputMismatchException e) {
+            System.out.println(VERMELHO + "Idade inválida! Digite um número inteiro." + RESET);
+            SC.nextLine(); 
         }
-        System.out.println("Insira qualquer caracter para sair!");
-        SC.next();
     }
+    System.out.printf("Especie: \n");
+    especie = SC.next();
+    System.out.printf("Raça: \n");
+    raca = SC.next();
+    System.out.printf("Sexo: \n");
+    sexo = SC.next();
+    while (true) {
+        try {
+            System.out.printf("Peso: \n");
+            peso = SC.nextDouble();
+            break;
+        } catch (InputMismatchException e) {
+            System.out.println(VERMELHO + "Peso inválido! Digite um número válido (ex: 4,5)." + RESET);
+            SC.nextLine(); 
+        }
+    }
+    System.out.printf("CPF do tutor (0 para cancelar): \n");
+    String cpf = SC.next();
+    if (cpf.equals("0")) return;
+    tutor = cadastroTutor.buscarPorCPF(cpf);
+    if (tutor != null) {
+        Pet pet = new Pet(nome, idade, especie, raca, sexo, peso, tutor);
+        cadastroPet.novoPet(pet, tutor);
+        System.out.println(VERDE + "Cadastro concluído com sucesso!" + RESET);
+    } else {
+        System.out.println();
+        System.out.println(VERMELHO + "CPF não encontrado!");
+        System.out.println("Possíveis motivos:");
+        System.out.println(" - O CPF foi digitado incorretamente;");
+        System.out.println(" - O tutor ainda não foi cadastrado.");
+        System.out.println("Tente novamente ou cadastre um novo tutor." + RESET);
+        System.out.println();
+    }
+    System.out.println("Insira qualquer caracter para sair!");
+    SC.nextLine();
+    SC.next();
+}
+
 
     public static void removerPets() {
         limpaTerminal();
@@ -226,13 +260,16 @@ public class Main {
         cadastroPet.listarPets();
         if (!cadastroPet.isCadastroVazio()) {
             System.out.print("Insira o ID de que pet deseja remover: ");
+            int id = SC.nextInt();
+            if (id == 0) {
+                return;
+            }
             cadastroPet.removerPet(SC.nextInt());
         }
         System.out.println("Insira qualquer caracter para sair!");
         SC.next();
     }
 
-    // ADICIONAR CPF DO DONO
     public static void listarPets() {
         limpaTerminal();
         System.out.println("============== LISTA DE PETS CADASTRADOS ==============");
@@ -298,8 +335,11 @@ public class Main {
         String telefone = "";
         while (true) {
             try {
-                System.out.print("Telefone: ");
+                System.out.print("Telefone (0 para cancelar): ");
                 telefone = SC.next();
+                if (telefone.equals("0")) {
+                    return;
+                }
                 break;
             } catch (Exception e) {
                 System.out.println("\u001B[31mEntrada inválida para telefone. Tente novamente.\u001B[0m");
@@ -319,8 +359,21 @@ public class Main {
         System.out.println("============== REMOÇÃO ==============");
         cadastroTutor.listarTutores();
         if (!cadastroTutor.isCadastroVazio()) {
-            System.out.print("Insira o ID de que tutor deseja remover: ");
-            cadastroTutor.removerTutor(SC.nextInt());
+            int id;
+            while (true) {
+            try {
+                System.out.print("Insira o ID de que tutor deseja remover (0 para cancelar): ");
+                id = SC.nextInt();
+                if (id == 0) {
+                    return;
+                }
+                cadastroTutor.removerTutor(id);
+                break;
+            } catch (Exception e) {
+                System.out.println("\u001B[31mEntrada inválida para ID. Tente novamente.\u001B[0m");
+                SC.nextLine();
+            }
+        }
         }
         System.out.println("Insira qualquer caracter para sair!");
         SC.next();
@@ -335,48 +388,88 @@ public class Main {
     }
 
     public static void listarPetDosTutores() {
-        limpaTerminal();
-        System.out.println("============== LISTA DE TUTORES CADASTRADOS ==============");
-        cadastroTutor.listarTutores();
-        if (!cadastroTutor.isCadastroVazio()) {
-            System.out.print("Insira o ID de que tutor deseja ver os pets: ");
-            int num = SC.nextInt();
-            limpaTerminal();
-            if (!cadastroTutor.isTutorSemPet(num)) {
-                System.out.printf("============== LISTA DE PETS CADASTRADOS NO TUTOR %S  ==============\n",
-                        cadastroTutor.getTutor(num).getNome());
+    limpaTerminal();
+    System.out.println("============== LISTA DE TUTORES CADASTRADOS ==============");
+    cadastroTutor.listarTutores();
+    if (!cadastroTutor.isCadastroVazio()) {
+        int num = -1;
+        while (true) {
+            try {
+                System.out.print("Insira o ID de que tutor deseja ver os pets: ");
+                num = SC.nextInt();
+                break;
+            } catch (InputMismatchException e) {
+                System.out.println("\u001B[31mEntrada inválida! Digite apenas números inteiros.\u001B[0m");
+                SC.nextLine();
             }
-            cadastroTutor.listarPetTutor(num);
         }
-        System.out.println("Insira qualquer caracter para sair!");
-        SC.next();
+        limpaTerminal();
+        if (!cadastroTutor.isTutorSemPet(num)) {
+            System.out.printf("============== LISTA DE PETS CADASTRADOS NO TUTOR %s ==============\n",
+                    cadastroTutor.getTutor(num).getNome());
+        }
+        cadastroTutor.listarPetTutor(num);
     }
+    System.out.println("Insira qualquer caracter para sair!");
+    SC.next();
+}
+
 
     public static void cadastrarServico() {
-        limpaTerminal();
-        Funcionario funcionario = null;
-        Pet pet = null;
-        System.out.println("============== CADASTRO SERVIÇO ==============");
-        System.out.print("Tipo do serviço: ");
-        String tipoServico = SC.next();
-        System.out.print("Data do serviço: ");
-        String data = SC.next();
-        System.out.print("Valor do serviço: ");
-        float valor = SC.nextFloat();
-        SC.nextLine();
-        while (funcionario == null) {
-            System.out.print("CPF do funcionário: ");
-            String cpf = SC.next();
-            funcionario = cadastroFuncionario.buscarPorCPF(cpf);
-            if (funcionario == null) {
-                System.out.println(VERMELHO + "CPF não encontrado!");
-                System.out.println("Possíveis motivos:");
-                System.out.println(" - O CPF foi digitado incorretamente;");
-                System.out.println(" - O funcionário ainda não foi cadastrado.");
-                System.out.println("Tente novamente ou cadastre um novo funcionário." + RESET);
-            }
+    limpaTerminal();
+    Funcionario funcionario = null;
+    Pet pet = null;
+    System.out.println("============== CADASTRO SERVIÇO ==============");
+    String tipoServico = "";
+    String data = "";
+    float valor = 0f;
+    while (true) {
+        try {
+            System.out.print("Tipo do serviço: ");
+            tipoServico = SC.next();
+            break;
+        } catch (Exception e) {
+            System.out.println(VERMELHO + "Entrada inválida, tente novamente." + RESET);
+            SC.nextLine();
         }
-        while (pet == null) {
+    }
+    while (true) {
+        try {
+            System.out.print("Data do serviço: ");
+            data = SC.next();
+            break;
+        } catch (Exception e) {
+            System.out.println(VERMELHO + "Entrada inválida, tente novamente." + RESET);
+            SC.nextLine();
+        }
+    }
+    while (true) {
+        try {
+            System.out.print("Valor do serviço: ");
+            valor = SC.nextFloat();
+            SC.nextLine();
+            break;
+        } catch (InputMismatchException e) {
+            System.out.println(VERMELHO + "Valor inválido! Digite apenas números (ex: 50.00)." + RESET);
+            SC.nextLine();
+        }
+    }
+    while (true) {
+        System.out.print("CPF do funcionário: ");
+        String cpf = SC.next();
+        funcionario = cadastroFuncionario.buscarPorCPF(cpf);
+        if (funcionario != null) {
+            break;
+        } else {
+            System.out.println(VERMELHO + "CPF não encontrado!");
+            System.out.println("Possíveis motivos:");
+            System.out.println(" - O CPF foi digitado incorretamente;");
+            System.out.println(" - O funcionário ainda não foi cadastrado.");
+            System.out.println("Tente novamente ou cadastre um novo funcionário." + RESET);
+        }
+    }
+    while (true) {
+        try {
             cadastroPet.listarPets();
             System.out.print("Insira o ID do pet que receberá o serviço (0 para cancelar): ");
             int num = SC.nextInt();
@@ -385,18 +478,23 @@ public class Main {
                 return;
             }
             pet = cadastroPet.getPet(num);
-            if (pet == null) {
+            if (pet != null) {
+                break;
+            } else {
                 System.out.println(VERMELHO + "Número inválido! Tente novamente." + RESET);
             }
+        } catch (InputMismatchException e) {
+            System.out.println(VERMELHO + "Entrada inválida! Digite apenas números inteiros." + RESET);
+            SC.nextLine();
         }
-        Servico servico = new Servico(tipoServico, data, valor, pet, funcionario);
-        cadastroServico.novoServico(servico);
-
-        System.out.println(VERDE + "Serviço cadastrado com sucesso!" + RESET);
-
-        System.out.println("Insira qualquer caracter para sair!");
-        SC.next();
     }
+    Servico servico = new Servico(tipoServico, data, valor, pet, funcionario);
+    cadastroServico.novoServico(servico);
+    System.out.println(VERDE + "Serviço cadastrado com sucesso!" + RESET);
+    System.out.println("Insira qualquer caracter para sair!");
+    SC.next();
+}
+
 
     public static void listarServicos() {
         limpaTerminal();
@@ -407,11 +505,15 @@ public class Main {
     }
 
     public static void removerServico() {
+        limpaTerminal();
         System.out.println("============== REMOÇÃO ==============");
         cadastroServico.listarServico();
         if (!cadastroServico.isVazio()) {
-            System.out.print("Insira o ID do serviço que quer remover: ");
+            System.out.print("Insira o ID do serviço que quer remover (0 para cancelar): ");
             int num = SC.nextInt();
+            if (num == 0) {
+                return;
+            }
             cadastroServico.removerServico(num);
         }
         System.out.println("Insira qualquer caracter para sair!");
@@ -422,9 +524,12 @@ public class Main {
         limpaTerminal();
         System.out.println("============== CONCLUIR SERVIÇOS ==============");
         if (cadastroServico.listarServicosAtivos()) {
-            System.out.print("Insira o ID do serviço que quer concluir: ");
+            System.out.print("Insira o ID do serviço que quer concluir (0 para cancelar): ");
             int num = SC.nextInt();
-            cadastroServico.removerServico(num);
+            if (num == 0) {
+                return;
+            }
+            cadastroServico.concluirServico(num);
         }
         System.out.println("Insira qualquer caracter para sair!");
         SC.next();
@@ -439,42 +544,64 @@ public class Main {
     }
 
     public static void cadastrarFuncionario() {
-        limpaTerminal();
-        System.out.println("============== CADASTRO FUNCIONÁRIO ==============");
-        System.out.printf("Nome: \n");
-        String nome = SC.next();
-        System.out.printf("Idade: \n");
-        byte idade = SC.nextByte();
-        System.out.printf("CPF: \n");
-        String cpf = SC.next();
-        while (cadastroFuncionario.buscarPorCPF(cpf) != null) {
-            System.out.println("CPF já existente, tente outro! (0 para cancelar cadastro)");
-            cpf = SC.next();
-            if (cpf.equals("0")) {
-                return;
-            }
+    limpaTerminal();
+    System.out.println("============== CADASTRO FUNCIONÁRIO ==============");
+    String nome = "";
+    byte idade = 0;
+    String cpf = "";
+    String email = "";
+    String telefone = "";
+    String cargo = "";
+    System.out.printf("Nome: \n");
+    nome = SC.next();
+    while (true) {
+        try {
+            System.out.printf("Idade: \n");
+            idade = SC.nextByte();
+            break; 
+        } catch (InputMismatchException e) {
+            System.out.println(VERMELHO + "Idade inválida! Digite um número inteiro." + RESET);
+            SC.nextLine();
         }
-        System.out.printf("Email: \n");
-        String email = SC.next();
-        System.out.printf("Telefone: \n");
-        String telefone = SC.next();
-        System.out.printf("Cargo: \n");
-        String cargo = SC.next();
-        // fazer a verificacao de cpf ja existente
-        Funcionario funcionario = new Funcionario(nome, idade, cpf, email, telefone, cargo);
-        cadastroFuncionario.novoFuncionario(funcionario);
-        System.out.println(VERDE + "Funcionario cadastrado com sucesso!" + RESET);
-        System.out.println("Insira qualquer caracter para sair!");
-        SC.next();
     }
+    while (true) {
+        System.out.printf("CPF: \n");
+        cpf = SC.next();
+        if (cpf.equals("0")) {
+            return; 
+        }
+        if (cadastroFuncionario.buscarPorCPF(cpf) == null) {
+            break; 
+        }
+        System.out.println(VERMELHO + "CPF já existente, tente outro! (0 para cancelar cadastro)" + RESET);
+    }
+    System.out.printf("Email: \n");
+    email = SC.next();
+    System.out.printf("Telefone: \n");
+    telefone = SC.next();
+    System.out.printf("Cargo (0 para cancelar): \n");
+    cargo = SC.next();
+    if (cargo.equals("0")) {
+        return;
+    }
+    Funcionario funcionario = new Funcionario(nome, idade, cpf, email, telefone, cargo);
+    cadastroFuncionario.novoFuncionario(funcionario);
+    System.out.println(VERDE + "Funcionário cadastrado com sucesso!" + RESET);
+    System.out.println("Insira qualquer caracter para sair!");
+    SC.next();
+}
+
 
     public static void removerFuncionarios() {
         limpaTerminal();
         System.out.println("============== REMOÇÃO ==============");
         cadastroFuncionario.listarFuncionarios();
         if (!cadastroFuncionario.isVazio()) {
-            System.out.print("Insira o ID do funcionário que deseja remover: ");
+            System.out.print("Insira o ID do funcionário que deseja remover (0 para cancelar): ");
             int num = SC.nextInt();
+            if (num == 0) {
+                return;
+            }
             cadastroFuncionario.removeFuncionario(num);
         }
         System.out.println("Insira qualquer caracter para sair!");
@@ -496,6 +623,7 @@ public class Main {
         System.out.print("Insira o ID do funcionário visualizar os serviços: ");
         int num = SC.nextInt();
         limpaTerminal();
+        System.out.println("============== LISTA DE SERVIÇOS ==============");
         cadastroFuncionario.listarServicosFuncionario(num);
         System.out.println("Insira qualquer caracter para sair!");
         SC.next();

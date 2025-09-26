@@ -7,7 +7,7 @@ import model.Servico;
 
 public class CadastroFuncionario {
     private ArrayList<Funcionario> funcionarios = new ArrayList<>();
-    CadastroServico cadastroServico;
+    private CadastroServico cadastroServico;
 
     public CadastroFuncionario(CadastroServico cadastroServico) {
         this.cadastroServico = cadastroServico;

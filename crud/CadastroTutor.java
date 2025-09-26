@@ -23,9 +23,9 @@ public class CadastroTutor {
         if ((num - 1) >= 0 && (num - 1) < tutores.size()) {
             cadastroPet.removerPetPorTutor(tutores.get(num - 1));
             tutores.remove(num - 1);
-            System.out.println("Tutor removido com sucesso!");
+            System.out.println("\u001B[32m"+"Tutor removido com sucesso!"+"\u001B[0m");
         } else {
-            System.out.println("Número inválido, tente novamente.");
+            System.out.println("\u001B[31m"+"Número inválido, tente novamente."+"\u001B[0m");
         }
     }
 

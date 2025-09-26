@@ -41,18 +41,20 @@ public class CadastroPet {
     }
 
     public void listarPets() {
-        if (pets.isEmpty()) {
-            System.out.println("\u001B[31m" + "Nenhum pet castrado." + "\u001B[0m");
-        } else {
-            System.out.printf("%-3s | %-15s | %-15s | %-15s | %-15s\n", "ID", "Nome do Pet", "Especie do Pet",
-                    "Raça do Pet", "Dono");
-            for (int i = 0; i < pets.size(); i++) {
-                System.out.printf("%-3d | %-15s | %-15s | %-15s | %-15s\n",
-                        (i + 1), pets.get(i).getNome(), pets.get(i).getEspecie(), pets.get(i).getRaca(),
-                        pets.get(i).getTutor().getNome());
-            }
+    if (pets.isEmpty()) {
+        System.out.println("\u001B[31m" + "Nenhum pet cadastrado." + "\u001B[0m");
+    } else {
+        System.out.printf("%-3s | %-15s | %-5s | %-10s | %-15s | %-6s | %-8s | %-15s\n",
+                "ID", "Nome", "Idade", "Espécie", "Raça", "Sexo", "Peso", "Tutor");
+        for (int i = 0; i < pets.size(); i++) {
+            Pet p = pets.get(i);
+            System.out.printf("%-3d | %-15s | %-5d | %-10s | %-15s | %-6s | %-8.2f | %-15s\n",
+                    (i + 1), p.getNome(), p.getIdade(), p.getEspecie(), p.getRaca(),
+                    p.getSexo(), p.getPeso(), p.getTutor().getNome());
         }
     }
+}
+
 
     public void removerPetPorTutor(Tutor tutor) {
         for (int i = 0; i < pets.size(); i++) {
