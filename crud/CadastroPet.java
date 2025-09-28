@@ -26,9 +26,9 @@ public class CadastroPet {
         if ((num - 1) >= 0 && (num - 1) < pets.size()) {
             pets.get(num - 1).getTutor().removerPet(pets.get(num - 1).getNome());
             pets.remove(num - 1);
-            System.out.println("Pet removido com sucesso!");
+            System.out.println("\u001B[32 mPet removido com sucesso!\u001B[0m");
         } else {
-            System.out.println("Número inválido, tente novamente.");
+            System.out.println("\u001B[31mNúmero inválido, tente novamente.\u001B[0m");
         }
     }
 
@@ -44,11 +44,11 @@ public class CadastroPet {
     if (pets.isEmpty()) {
         System.out.println("\u001B[31m" + "Nenhum pet cadastrado." + "\u001B[0m");
     } else {
-        System.out.printf("%-3s | %-15s | %-5s | %-10s | %-15s | %-6s | %-8s | %-15s\n",
+        System.out.printf("%-3s | %-15s | %-5s | %-10s | %-15s | %-10s | %-8s | %-15s\n",
                 "ID", "Nome", "Idade", "Espécie", "Raça", "Sexo", "Peso", "Tutor");
         for (int i = 0; i < pets.size(); i++) {
             Pet p = pets.get(i);
-            System.out.printf("%-3d | %-15s | %-5d | %-10s | %-15s | %-6s | %-8.2f | %-15s\n",
+            System.out.printf("%-3d | %-15s | %-5d | %-10s | %-15s | %-10s | %-8.2f | %-15s\n",
                     (i + 1), p.getNome(), p.getIdade(), p.getEspecie(), p.getRaca(),
                     p.getSexo(), p.getPeso(), p.getTutor().getNome());
         }

@@ -264,7 +264,7 @@ public class Main {
             if (id == 0) {
                 return;
             }
-            cadastroPet.removerPet(SC.nextInt());
+            cadastroPet.removerPet(id);
         }
         System.out.println("Insira qualquer caracter para sair!");
         SC.next();
@@ -525,11 +525,18 @@ public class Main {
         System.out.println("============== CONCLUIR SERVIÇOS ==============");
         if (cadastroServico.listarServicosAtivos()) {
             System.out.print("Insira o ID do serviço que quer concluir (0 para cancelar): ");
-            int num = SC.nextInt();
-            if (num == 0) {
-                return;
+            while (true) { 
+                try {
+                    int num = SC.nextInt();
+                    if (num == 0) {
+                        return;
+                    }
+                    cadastroServico.concluirServico(num);
+                    break;
+                } catch (Exception e) {
+                    System.out.println("Serviço inexistente, tente novamente");
+                }
             }
-            cadastroServico.concluirServico(num);
         }
         System.out.println("Insira qualquer caracter para sair!");
         SC.next();
@@ -620,7 +627,7 @@ public class Main {
         limpaTerminal();
         System.out.println("============== LISTAR SERVIÇOS DO FUNCIONARIO ==============");
         cadastroFuncionario.listarFuncionarios();
-        System.out.print("Insira o ID do funcionário visualizar os serviços: ");
+        System.out.print("Insira o ID do funcionário que deseja visualizar os serviços: ");
         int num = SC.nextInt();
         limpaTerminal();
         System.out.println("============== LISTA DE SERVIÇOS ==============");

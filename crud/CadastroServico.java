@@ -115,5 +115,6 @@ public class CadastroServico {
 
     public void concluirServico(int num) {
         servicos.get(num - 1).concluirServico();
+        System.out.println("\u001B[32mConcluido com sucesso\u001B[0m");
     }
 }
